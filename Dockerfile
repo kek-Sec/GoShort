@@ -1,6 +1,9 @@
 # Stage 1: Build the Go application
 FROM golang:1.22.4 AS builder
 
+ARG VERSION=dev
+ENV VERSION=${VERSION}
+
 # Set working directory
 WORKDIR /app
 
@@ -14,7 +17,7 @@ RUN go mod download
 COPY . .
 
 # Build the Go application
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o goshort ./cmd/server
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w -X main.version=${VERSION}" -o goshort ./cmd/server
 
 # Stage 2: Build the SvelteKit web application
 FROM node:18 AS web-builder
