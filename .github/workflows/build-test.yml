@@ -25,8 +25,8 @@ jobs:
       - name: 🛠️ Build Go Project
         run: go build -o server ./cmd/server/main.go
 
-  build-vue:
-    name: 🌐 Build Vue Project
+  build-Svelte:
+    name: 🌐 Build Svelte Project
     runs-on: ubuntu-latest
 
     steps:
@@ -38,14 +38,14 @@ jobs:
         with:
           node-version: '20'
 
-      - name: 📦 Install Vue Dependencies
+      - name: 📦 Install Svelte Dependencies
         run: |
-          cd ui
+          cd web
           npm install
 
-      - name: 🖥️ Build Vue Project
+      - name: 🖥️ Build Svelte Project
         run: |
-          cd ui
+          cd web
           npm run build
 
   test-go:
@@ -110,7 +110,7 @@ jobs:
         with:
           node-version: '20'
 
-      - name: 📦 Install Vue Dependencies
+      - name: 📦 Install Svelte Dependencies
         run: |
           cd ui
           npm install
