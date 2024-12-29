@@ -1,5 +1,5 @@
 services:
-  app:
+  goshort:
     build:
       context: .
       dockerfile: Dockerfile
@@ -8,7 +8,6 @@ services:
       - "8081:80" # Frontend
     environment:
       DATABASE_URL: postgres://goshort:goshort_password@database:5432/goshort?sslmode=disable
-      JWT_SECRET: your-secret-key
     depends_on:
       database:
         condition: service_healthy
