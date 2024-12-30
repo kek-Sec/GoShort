@@ -97,10 +97,10 @@ jobs:
 
       - name: 📦 Install Svelte Dependencies
         run: |
-          cd ui
+          cd web
           npm install
 
       - name: 🔍 Run NPM Audit
         run: |
-          cd ui
+          cd web
           npm audit --audit-level=high || true
