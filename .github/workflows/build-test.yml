@@ -19,11 +19,8 @@ jobs:
         with:
           go-version: '1.22'
 
-      - name: 📦 Install Go Dependencies
-        run: go mod tidy
-
       - name: 🛠️ Build Go Project
-        run: go build -o server ./cmd/server/main.go
+        run: make build
 
   build-Svelte:
     name: 🌐 Build Svelte Project
@@ -61,11 +58,8 @@ jobs:
         with:
           go-version: '1.22'
 
-      - name: 📦 Install Go Dependencies
-        run: go mod tidy
-
-      - name: ✅ Run Go Tests with Coverage
-        run: go test ./... -v -coverprofile=coverage.out
+      - name: ✅ Run Go Tests
+        run: make test
 
       - name: 📊 Upload Code Coverage Report
         uses: actions/upload-artifact@v4
@@ -91,9 +85,6 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.22'
-
-      - name: 📦 Install Go Dependencies
-        run: go mod tidy
 
       - name: 🔍 Run Golang Security Scanner
         uses: securego/gosec@v2.21.4
