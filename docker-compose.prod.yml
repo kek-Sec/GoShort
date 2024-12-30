@@ -1,0 +1,34 @@
+services:
+  goshort-db:
+    image: postgres:17-alpine
+    container_name: goshort_db
+    environment:
+      POSTGRES_USER: goshort
+      POSTGRES_PASSWORD: goshort_password
+      POSTGRES_DB: goshort
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U goshort -d goshort"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - goshort_net
+
+  goshort:
+    image: ghcr.io/kek-sec/goshort:1.0.1
+    container_name: goshort_app
+    environment:
+      DATABASE_URL: postgres://goshort:goshort_password@goshort-db:5432/goshort?sslmode=disable
+    depends_on:
+      goshort-db:
+        condition: service_healthy
+    ports:
+      - 8081:80
+    networks:
+      - goshort_net
+
+networks:
+  goshort_net:
+    external: true
