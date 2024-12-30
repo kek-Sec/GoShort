@@ -1,4 +1,4 @@
-package v1
+package main
 
 import (
 	"GoShort/internal/db"
@@ -6,6 +6,7 @@ import (
 	"GoShort/internal/utils"
 	"encoding/json"
 	"net/http"
+	"regexp"
 	"time"
 )
 
@@ -19,6 +20,14 @@ type ShortenRequest struct {
 // ShortenResponse represents the response payload for URL shortening
 type ShortenResponse struct {
 	ShortURL string `json:"short_url"`
+}
+
+// validateCustomURL ensures the custom URL does not contain spaces or illegal characters
+func validateCustomURL(customURL string) bool {
+	// Define a regex for allowed characters (alphanumeric and dashes/underscores only)
+	validURLPattern := `^[a-zA-Z0-9_-]+$`
+	re := regexp.MustCompile(validURLPattern)
+	return re.MatchString(customURL)
 }
 
 // ShortenURL handles the URL shortening request
@@ -37,15 +46,19 @@ func ShortenURL(w http.ResponseWriter, r *http.Request) {
 
 	// Use custom URL if provided, otherwise generate a new one
 	shortURL := req.CustomURL
-	if shortURL == "" {
-		shortURL = utils.GenerateShortURL()
-	} else {
+	if shortURL != "" {
+		if !validateCustomURL(shortURL) {
+			http.Error(w, "Custom URL contains invalid characters", http.StatusBadRequest)
+			return
+		}
 		// Check if the custom URL already exists
 		var existingURL models.URL
 		if err := db.DB.Where("short_url = ?", shortURL).First(&existingURL).Error; err == nil {
 			http.Error(w, "Custom URL is already taken", http.StatusConflict)
 			return
 		}
+	} else {
+		shortURL = utils.GenerateShortURL()
 	}
 
 	// Parse expiry if provided
