@@ -15,7 +15,7 @@
       <p class="text-sm">
         View the project on
         <a
-          href="https://github.com/your-repo"
+          href="https://github.com/kek-Sec/GoShort"
           target="_blank"
           class="text-blue-600 underline hover:text-blue-500 font-medium"
         >
