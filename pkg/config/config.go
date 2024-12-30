@@ -17,7 +17,6 @@ func Load() {
 
 	configMap = map[string]string{
 		"DATABASE_URL": os.Getenv("DATABASE_URL"),
-		"JWT_SECRET":   os.Getenv("JWT_SECRET"),
 		"PORT":         os.Getenv("PORT"),
 	}
 }
