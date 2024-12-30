@@ -1,18 +1,29 @@
 <script>
 	export let longUrl = '';
 	export let shortUrl = '';
-	export let customUrl = ''; // New input for custom URL
+	export let customUrl = '';
 	export let errorMessage = '';
 	export let expiry = '';
 	export let validationError = '';
 	export let isCopied = false;
-	export let showAccordion = false; // Controls the accordion
+	export let showAccordion = false;
 
 	// Function to validate the custom URL input
 	const validateCustomUrl = (url) => {
-		// Ensure no spaces or illegal characters (allow only alphanumeric, underscores, and dashes)
 		const customUrlRegex = /^[a-zA-Z0-9_-]+$/;
 		return customUrlRegex.test(url);
+	};
+
+	// Function to ensure URL has https://
+	const ensureHttps = (url) => {
+		if (!url.startsWith('http')) {
+			return `https://${url}`;
+		}
+		return url;
+	};
+
+	const handleInputChange = (event) => {
+		longUrl = ensureHttps(event.target.value);
 	};
 
 	export let shortenUrl = async () => {
@@ -20,21 +31,20 @@
 			validationError = 'Please enter a valid URL.';
 			return;
 		}
+
 		if (customUrl && !validateCustomUrl(customUrl)) {
 			validationError =
 				'Custom URL contains spaces or invalid characters. Only alphanumeric, dashes, and underscores are allowed.';
 			return;
 		}
-		validationError = ''; // Clear validation error
+		validationError = '';
 
 		try {
 			errorMessage = '';
-			shortUrl = ''; // Clear previous result
+			shortUrl = '';
 
-			// Mocked shortening for UI testing
 			shortUrl = `${window.location.origin}/${customUrl || 'generated-url'}`;
 
-			// Collapse the accordion
 			showAccordion = false;
 		} catch (error) {
 			console.error('Error shortening URL:', error);
@@ -65,6 +75,7 @@
 				id="long-url"
 				type="url"
 				bind:value={longUrl}
+				on:input={handleInputChange}
 				placeholder="Enter your URL"
 				class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-blue-300 focus:outline-none"
 				required
@@ -112,9 +123,7 @@
 
 					<!-- Expiry Date Input -->
 					<div>
-						<label for="expiry" class="block text-gray-700 font-medium mb-2"
-							>Expiry Date & Time</label
-						>
+						<label for="expiry" class="block text-gray-700 font-medium mb-2">Expiry Date & Time</label>
 						<input
 							id="expiry"
 							type="datetime-local"
