@@ -67,12 +67,6 @@ jobs:
           name: go-code-coverage
           path: coverage.out
 
-      - name: 📝 Publish Coverage to Coveralls
-        uses: shogo82148/actions-goveralls@v1
-        with:
-          path-to-profile: coverage.out
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
   scan-vulnerabilities:
     name: 🔍 Scan for Vulnerabilities
     runs-on: ubuntu-latest
