@@ -27,13 +27,32 @@ type LoginResponse struct {
 	} `json:"user"`
 }
 
+// ErrorResponse represents a standardized error response
+type ErrorResponse struct {
+	Error   string `json:"error"`
+	Message string `json:"message"`
+	Status  int    `json:"status"`
+}
+
+// sendJSONError sends a standardized error response
+func sendJSONError(w http.ResponseWriter, message string, status int) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	errorResponse := ErrorResponse{
+		Error:   http.StatusText(status),
+		Message: message,
+		Status:  status,
+	}
+	json.NewEncoder(w).Encode(errorResponse)
+}
+
 // LoginHandler authenticates users and issues JWT tokens
 func LoginHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Parse request body
 		var loginReq LoginRequest
 		if err := json.NewDecoder(r.Body).Decode(&loginReq); err != nil {
-			http.Error(w, "Invalid request body", http.StatusBadRequest)
+			sendJSONError(w, "Invalid request format", http.StatusBadRequest)
 			return
 		}
 
@@ -42,7 +61,7 @@ func LoginHandler(db *gorm.DB) http.HandlerFunc {
 		result := db.Where("username = ?", loginReq.Username).First(&user)
 		if result.Error != nil {
 			logger.Error("Login failed: "+result.Error.Error(), nil)
-			http.Error(w, "Invalid credentials", http.StatusUnauthorized)
+			sendJSONError(w, "Invalid username or password", http.StatusUnauthorized)
 			return
 		}
 
@@ -52,14 +71,14 @@ func LoginHandler(db *gorm.DB) http.HandlerFunc {
 			logger.Error("Invalid password attempt for user: "+user.Username, map[string]interface{}{
 				"username": user.Username,
 			})
-			http.Error(w, "Invalid credentials", http.StatusUnauthorized)
+			sendJSONError(w, "Invalid username or password", http.StatusUnauthorized)
 			return
 		}
 
 		// Generate JWT token
 		token, err := GenerateToken(user)
 		if err != nil {
-			http.Error(w, "Error generating token", http.StatusInternalServerError)
+			sendJSONError(w, "Error generating authentication token", http.StatusInternalServerError)
 			return
 		}
 
@@ -76,7 +95,7 @@ func LoginHandler(db *gorm.DB) http.HandlerFunc {
 
 		// Set response headers
 		w.Header().Set("Content-Type", "application/json")
-		
+
 		// Return the response
 		json.NewEncoder(w).Encode(resp)
 	}

@@ -11,6 +11,7 @@
   let password = '';
   let isLoading = false;
   let errorMessage = '';
+  let errorDetails = '';
 
   // Form validation
   let touched = {
@@ -35,10 +36,9 @@
 
     isLoading = true;
     errorMessage = '';
+    errorDetails = '';
 
     try {
-      // For static sites, using fetch might not work as expected without a server
-      // This is a client-side only operation
       if (browser) {
         const response = await fetch('/api/v1/auth/login', {
           method: 'POST',
@@ -48,12 +48,14 @@
           body: JSON.stringify({ username, password })
         });
 
-        if (!response.ok) {
-          const data = await response.json();
-          throw new Error(data.message || 'Login failed');
-        }
-
         const data = await response.json();
+
+        if (!response.ok) {
+          // Handle error response from API
+          errorMessage = data.message || 'Authentication failed';
+          errorDetails = data.error || '';
+          throw new Error(errorMessage);
+        }
 
         // Store the JWT token
         localStorage.setItem('authToken', data.token);
@@ -62,11 +64,19 @@
         goto('/');
       }
     } catch (error) {
-      errorMessage = error.message || 'An error occurred during login';
+      if (!errorMessage) {
+        errorMessage = 'An error occurred during login';
+        errorDetails = error.message || 'Could not connect to the server';
+      }
       console.error('Login error:', error);
     } finally {
       isLoading = false;
     }
+  }
+
+  function clearErrors() {
+    errorMessage = '';
+    errorDetails = '';
   }
 </script>
 
@@ -81,16 +91,26 @@
   </div>
 
   {#if errorMessage}
-    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
-      <div class="flex">
-        <div class="flex-shrink-0">
-          <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-4 animate-fadeIn">
+      <div class="flex justify-between">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 101.414 1.414L10 11.414l1.293 1.293a1 1 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm font-medium text-red-700">{errorMessage}</p>
+            {#if errorDetails}
+              <p class="text-xs text-red-600 mt-1">{errorDetails}</p>
+            {/if}
+          </div>
+        </div>
+        <button on:click={clearErrors} class="text-red-500 hover:text-red-700" aria-label="Close error message">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 011.414 1.414L11.414 10l4.293 4.293a1 1 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 01-1.414-1.414L8.586 10 4.293 5.707a1 1 010-1.414z" clip-rule="evenodd" />
           </svg>
-        </div>
-        <div class="ml-3">
-          <p class="text-sm text-red-700">{errorMessage}</p>
-        </div>
+        </button>
       </div>
     </div>
   {/if}
@@ -160,3 +180,14 @@
     </p>
   </div>
 </div>
+
+<style>
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
