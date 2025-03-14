@@ -21,6 +21,17 @@ services:
     container_name: goshort_app
     environment:
       DATABASE_URL: postgres://goshort:goshort_password@goshort-db:5432/goshort?sslmode=disable
+      # Branding customization (uncomment and modify as needed)
+      # BRAND_TITLE: "MyShort - URL Shortener"
+      # BRAND_DESCRIPTION: "A fast and customizable URL shortener for your organization"
+      # BRAND_AUTHOR: "Your Company Name"
+      # BRAND_THEME_COLOR: "#2563eb"
+      # BRAND_LOGO_TEXT: "MyShort"
+      # BRAND_PRIMARY_COLOR: "#2563eb"
+      # BRAND_SECONDARY_COLOR: "#10b981"
+      # BRAND_HEADER_TITLE: "MyShort - Simplify Your URLs"
+      # BRAND_FOOTER_TEXT: "Powered by"
+      # BRAND_FOOTER_LINK: "https://yourcompany.com"
     depends_on:
       goshort-db:
         condition: service_healthy

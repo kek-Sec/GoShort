@@ -1,7 +1,8 @@
 package main
 
 import (
-	"GoShort/internal/api/v1"
+	v1 "GoShort/internal/api/v1"
+
 	"github.com/gorilla/mux"
 )
 
@@ -12,6 +13,7 @@ func setupRouter() *mux.Router {
 	// V1 Routes
 	apiV1 := router.PathPrefix("/v1").Subrouter()
 	apiV1.HandleFunc("/shorten", v1.ShortenURL).Methods("POST")
+	apiV1.HandleFunc("/config", v1.GetConfig).Methods("GET") // Add config endpoint
 
 	// Redirect Route (catch-all)
 	router.HandleFunc("/{shortURL}", v1.RedirectURL).Methods("GET")

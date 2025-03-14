@@ -2,6 +2,30 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+:root {
+  /* Default theme colors that will be overridden by dynamic values */
+  --brand-primary: #3b82f6;
+  --brand-secondary: #10b981;
+  --brand-theme: #4caf50;
+}
+
+/* Add utility classes for dynamic colors */
+.text-brand-primary {
+  color: var(--brand-primary) !important;
+}
+
+.bg-brand-primary {
+  background-color: var(--brand-primary) !important;
+}
+
+.text-brand-secondary {
+  color: var(--brand-secondary) !important;
+}
+
+.bg-brand-secondary {
+  background-color: var(--brand-secondary) !important;
+}
+
 html,
 body {
   margin: 0;
@@ -14,4 +38,3 @@ body {
   display: flex;
   flex-direction: column;
 }
-

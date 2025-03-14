@@ -9,6 +9,16 @@ export default {
 	theme: {
 		extend: {}
 	},
+	
+	// Add a safelist for dynamic classes
+	safelist: [
+		'text-brand-primary',
+		'bg-brand-primary',
+		'text-brand-secondary',
+		'bg-brand-secondary',
+		'ring-brand-primary',
+		'ring-brand-secondary',
+	],
 
 	plugins: [typography, forms, containerQueries]
 };
