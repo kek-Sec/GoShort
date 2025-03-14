@@ -30,6 +30,20 @@ var migrations = []Migration{
 			`).Error
 		},
 	},
+	{
+		ID: "20240102_create_users_table",
+		Migrate: func(tx *gorm.DB) error {
+			return tx.Exec(`
+				CREATE TABLE IF NOT EXISTS users (
+					id SERIAL PRIMARY KEY,
+					username TEXT UNIQUE NOT NULL,
+					password TEXT NOT NULL,
+					last_login TIMESTAMP,
+					created_at TIMESTAMP NOT NULL DEFAULT NOW()
+				);
+			`).Error
+		},
+	},
 }
 
 // RunMigrations applies all pending migrations
