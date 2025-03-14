@@ -3,6 +3,7 @@ package main
 import (
 	"GoShort/pkg/config"
 	"GoShort/pkg/logger"
+	"GoShort/migrations"
 	"GoShort/internal/db"
 	"log"
 	"net/http"
@@ -19,6 +20,13 @@ func main() {
 
 	// Initialize database
 	db.InitDB()
+
+	// Run migrations
+	migrations.RunMigrations()
+
+	if err := db.CreateInitialAdminUser(); err != nil {
+        logger.Error("Failed to create admin user", map[string]interface{}{"error": err.Error()})
+    }
 
 	// Set up HTTP server
 	router := setupRouter()
