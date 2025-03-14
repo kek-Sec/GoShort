@@ -50,6 +50,8 @@ func GetConfig(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate") // Prevent caching
 
-	// Encode config as JSON and send response
-	json.NewEncoder(w).Encode(config)
+	// Encode config as JSON and send response with error handling
+	if err := json.NewEncoder(w).Encode(config); err != nil {
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+	}
 }
