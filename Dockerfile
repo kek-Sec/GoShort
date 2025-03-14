@@ -54,6 +54,19 @@ COPY nginx.conf /etc/nginx/nginx.conf
 # Copy supervisord configuration
 COPY supervisord.conf /etc/supervisord.conf
 
+# Set environment variables with default values that can be overridden
+ENV BRAND_TITLE="GoShort - URL Shortener" \
+    BRAND_DESCRIPTION="GoShort is a powerful and user-friendly URL shortener. Simplify, manage, and track your links with ease." \
+    BRAND_KEYWORDS="URL shortener, GoShort, link management, shorten URLs, track links" \
+    BRAND_AUTHOR="GoShort Team" \
+    BRAND_THEME_COLOR="#4caf50" \
+    BRAND_LOGO_TEXT="GoShort" \
+    BRAND_PRIMARY_COLOR="#3b82f6" \
+    BRAND_SECONDARY_COLOR="#10b981" \
+    BRAND_HEADER_TITLE="GoShort - URL Shortener" \
+    BRAND_FOOTER_TEXT="View the project on" \
+    BRAND_FOOTER_LINK="https://github.com/kek-Sec/GoShort"
+
 # Expose ports
 EXPOSE 80 8080
 

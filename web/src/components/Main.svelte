@@ -1,4 +1,7 @@
 <script>
+	import { getContext } from 'svelte';
+	import { page } from '$app/stores';
+
 	export let longUrl = '';
 	export let shortUrl = '';
 	export let customUrl = '';
@@ -7,6 +10,10 @@
 	export let validationError = '';
 	export let isCopied = false;
 	export let showAccordion = false;
+
+	// Get the brand config from the layout data
+	// Use $ to reactively access the store value in runes mode
+	const brandConfig = $page.data.brandConfig;
 
 	// Function to validate the custom URL input
 	const validateCustomUrl = (url) => {
@@ -65,7 +72,7 @@
 </script>
 
 <div class="flex flex-col items-center justify-center bg-gray-100 p-4">
-	<h1 class="text-4xl font-bold text-blue-600 mb-6">GoShort - URL Shortener</h1>
+	<h1 class="text-4xl font-bold text-[var(--brand-primary)] mb-6">{brandConfig.headerTitle}</h1>
 
 	<div class="w-full max-w-md space-y-4">
 		<!-- Long URL Input -->
@@ -77,7 +84,7 @@
 				bind:value={longUrl}
 				on:input={handleInputChange}
 				placeholder="Enter your URL"
-				class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-blue-300 focus:outline-none"
+				class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-[var(--brand-primary)] focus:outline-none"
 				required
 			/>
 			{#if validationError}
@@ -117,7 +124,7 @@
 							type="text"
 							bind:value={customUrl}
 							placeholder="Enter custom URL (e.g., my-short-url)"
-							class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-blue-300 focus:outline-none"
+							class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-[var(--brand-primary)] focus:outline-none"
 						/>
 					</div>
 
@@ -128,7 +135,7 @@
 							id="expiry"
 							type="datetime-local"
 							bind:value={expiry}
-							class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-blue-300 focus:outline-none"
+							class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-[var(--brand-primary)] focus:outline-none"
 						/>
 					</div>
 				</div>
@@ -138,7 +145,7 @@
 		<!-- Shorten Button -->
 		<button
 			on:click={shortenUrl}
-			class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 focus:ring focus:ring-blue-300 focus:outline-none transition"
+			class="w-full bg-[var(--brand-primary)] text-white font-semibold py-2 px-4 rounded-lg hover:opacity-90 focus:ring focus:ring-[var(--brand-primary)] focus:outline-none transition"
 		>
 			Shorten
 		</button>
@@ -152,11 +159,11 @@
 				<div
 					class="bg-gray-100 text-gray-800 px-4 py-2 rounded-md border border-gray-300 font-mono text-sm break-all w-full max-w-lg"
 				>
-					<a href={shortUrl} target="_blank" class="hover:text-blue-500">{shortUrl}</a>
+					<a href={shortUrl} target="_blank" class="hover:text-[var(--brand-primary)]">{shortUrl}</a>
 				</div>
 				<button
 					on:click={copyToClipboard}
-					class="bg-green-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-600 focus:ring focus:ring-green-300 focus:outline-none transition flex items-center space-x-2"
+					class="bg-[var(--brand-secondary)] text-white font-semibold py-2 px-4 rounded-lg hover:opacity-90 focus:ring focus:ring-[var(--brand-secondary)] focus:outline-none transition flex items-center space-x-2"
 				>
 					{#if isCopied}
 						<span class="animate-pulse">Copied! ✅</span>

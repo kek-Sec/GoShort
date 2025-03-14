@@ -1,3 +1,11 @@
+<script>
+  import { page } from '$app/stores';
+
+  // Get the brand config from the layout data
+  // Use $ to reactively access the store value in runes mode
+  const brandConfig = $page.data.brandConfig;
+</script>
+
 <footer class="bg-gray-200 text-gray-800 py-2 w-full border-t border-gray-300">
     <div class="container mx-auto flex justify-center items-center space-x-2">
       <svg
@@ -13,15 +21,14 @@
         />
       </svg>
       <p class="text-sm">
-        View the project on
+        {brandConfig.footerText}
         <a
-          href="https://github.com/kek-Sec/GoShort"
+          href={brandConfig.footerLink}
           target="_blank"
-          class="text-blue-600 underline hover:text-blue-500 font-medium"
+          class="text-[var(--brand-primary)] underline hover:opacity-80 font-medium"
         >
           GitHub
         </a>
       </p>
     </div>
-  </footer>
-  
+</footer>

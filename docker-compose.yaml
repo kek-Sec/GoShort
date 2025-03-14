@@ -8,6 +8,13 @@ services:
       - "8081:80" # Frontend
     environment:
       DATABASE_URL: postgres://goshort:goshort_password@database:5432/goshort?sslmode=disable
+      # Branding customization (optional)
+      BRAND_TITLE: "GoShort - URL Shortener"
+      BRAND_DESCRIPTION: "A fast and customizable URL shortener"
+      BRAND_THEME_COLOR: "#4caf50"
+      BRAND_PRIMARY_COLOR: "#3b82f6"
+      BRAND_SECONDARY_COLOR: "#10b981"
+      BRAND_HEADER_TITLE: "GoShort - URL Shortener"
     depends_on:
       database:
         condition: service_healthy
