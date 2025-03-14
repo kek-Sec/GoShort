@@ -1,6 +1,7 @@
 <script>
   import { page } from '$app/stores';
   import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
 
   // Get brand config from layout data
   const brandConfig = $page.data.brandConfig;
@@ -10,6 +11,7 @@
   let urls = [];
   let isLoading = true;
   let error = null;
+  let authInvalid = false;
 
   // Pagination
   let currentPage = 1;
@@ -17,9 +19,48 @@
   let pageSize = 5;
 
   onMount(async () => {
-    await fetchUserData();
-    await fetchUserUrls(currentPage);
+    // Validate token first
+    const isValid = await validateToken();
+    
+    if (isValid) {
+      await fetchUserData();
+      await fetchUserUrls(currentPage);
+    } else {
+      authInvalid = true;
+      // Auto logout after showing message for a moment
+      setTimeout(() => {
+        handleLogout();
+        if (typeof window !== 'undefined') {
+          window.location.href = '/'; // Redirect to home page
+        }
+      }, 3000);
+    }
   });
+
+  async function validateToken() {
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        throw new Error('No auth token found');
+      }
+
+      const response = await fetch('/api/v1/auth/validate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ token })
+      });
+
+      if (!response.ok) throw new Error('Token validation failed');
+
+      const data = await response.json();
+      return data.valid === true;
+    } catch (error) {
+      console.error('Authentication validation error:', error);
+      return false;
+    }
+  }
 
   async function fetchUserData() {
     try {
@@ -122,6 +163,24 @@
       </button>
     </div>
   </div>
+
+  <!-- Authentication Invalid Message -->
+  {#if authInvalid}
+    <div class="bg-red-100 border-l-4 border-red-500 p-4 m-4 animate-pulse">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a 1 1 0 00-1-1z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm font-medium text-red-800">
+            Your session has expired or is invalid. You will be logged out shortly.
+          </p>
+        </div>
+      </div>
+    </div>
+  {/if}
 
   <!-- Dashboard Content -->
   <div class="p-6">
@@ -233,3 +292,13 @@
     {/if}
   </div>
 </div>
+
+<style>
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+  }
+  .animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+</style>
