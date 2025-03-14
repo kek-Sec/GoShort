@@ -1,6 +1,7 @@
 <script>
 	import { getContext } from 'svelte';
 	import { page } from '$app/stores';
+	import Login from './Login.svelte';
 
 	export let longUrl = '';
 	export let shortUrl = '';
@@ -10,6 +11,7 @@
 	export let validationError = '';
 	export let isCopied = false;
 	export let showAccordion = false;
+	export let showLoginModal = false;
 
 	// Get the brand config from the layout data
 	// Use $ to reactively access the store value in runes mode
@@ -31,6 +33,14 @@
 
 	const handleInputChange = (event) => {
 		longUrl = ensureHttps(event.target.value);
+	};
+
+	const toggleLoginModal = () => {
+		showLoginModal = !showLoginModal;
+	};
+
+	const closeLoginModal = () => {
+		showLoginModal = false;
 	};
 
 	export let shortenUrl = async () => {
@@ -71,7 +81,39 @@
 	};
 </script>
 
-<div class="flex flex-col items-center justify-center bg-gray-100 p-4">
+<!-- Login Modal -->
+{#if showLoginModal}
+	<div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+		<div class="relative w-full max-w-md">
+			<!-- Close button -->
+			<button 
+				on:click={closeLoginModal}
+				class="absolute -top-12 right-0 text-white hover:text-gray-300"
+				aria-label="Close login modal"
+			>
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+				</svg>
+			</button>
+			<Login isModal={true} on:close={closeLoginModal} />
+		</div>
+	</div>
+{/if}
+
+<div class="flex flex-col items-center justify-center bg-gray-100 p-4 relative">
+	<!-- Login button -->
+	<div class="absolute top-4 right-4">
+		<button
+			on:click={toggleLoginModal}
+			class="bg-brand-secondary text-white font-medium py-2 px-4 rounded-lg hover:opacity-90 focus:ring-2 focus:ring-brand-secondary focus:outline-none transition flex items-center space-x-1"
+		>
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+				<path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+			</svg>
+			<span>Login</span>
+		</button>
+	</div>
+
 	<h1 class="text-4xl font-bold text-brand-primary mb-6">{brandConfig.headerTitle}</h1>
 
 	<div class="w-full max-w-md space-y-4">
