@@ -101,16 +101,19 @@
 {/if}
 
 <div class="flex flex-col items-center justify-center bg-gray-100 p-4 relative">
-	<!-- Login button -->
-	<div class="absolute top-4 right-4">
+	<!-- Login button - redesigned as icon-only with tooltip -->
+	<div class="absolute top-4 right-4 z-10">
 		<button
 			on:click={toggleLoginModal}
-			class="bg-brand-secondary text-white font-medium py-2 px-4 rounded-lg hover:opacity-90 focus:ring-2 focus:ring-brand-secondary focus:outline-none transition flex items-center space-x-1"
+			class="group bg-brand-secondary hover:bg-opacity-90 text-white p-2.5 rounded-full shadow-md transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-brand-secondary focus:ring-offset-2"
+			aria-label="Login"
 		>
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
 				<path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
 			</svg>
-			<span>Login</span>
+				<span class="invisible opacity-0 group-hover:visible group-hover:opacity-100 absolute -left-2 top-full mt-2 w-max bg-gray-800 text-white text-sm rounded px-3 py-1 transition-opacity duration-300 pointer-events-none">
+				Login
+			</span>
 		</button>
 	</div>
 

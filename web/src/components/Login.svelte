@@ -40,7 +40,7 @@
       // For static sites, using fetch might not work as expected without a server
       // This is a client-side only operation
       if (browser) {
-        const response = await fetch('/api/auth/login', {
+        const response = await fetch('/api/v1/auth/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
