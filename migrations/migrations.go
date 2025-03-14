@@ -38,6 +38,7 @@ var migrations = []Migration{
 					id SERIAL PRIMARY KEY,
 					username TEXT UNIQUE NOT NULL,
 					password TEXT NOT NULL,
+					role TEXT NOT NULL,
 					last_login TIMESTAMP,
 					created_at TIMESTAMP NOT NULL DEFAULT NOW()
 				);
