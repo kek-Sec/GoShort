@@ -15,6 +15,10 @@ func setupRouter() *mux.Router {
 	apiV1.HandleFunc("/shorten", v1.ShortenURL).Methods("POST")
 	apiV1.HandleFunc("/config", v1.GetConfig).Methods("GET") // Add config endpoint
 
+// Auth Routes
+	authRouter := apiV1.PathPrefix("/auth").Subrouter()
+	v1.RegisterAuthRoutes(authRouter)
+
 	// Redirect Route (catch-all)
 	router.HandleFunc("/{shortURL}", v1.RedirectURL).Methods("GET")
 
