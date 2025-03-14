@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"GoShort/internal/auth"
 	"GoShort/internal/db"
 	"GoShort/internal/models"
 	"GoShort/internal/utils"
@@ -72,11 +73,24 @@ func ShortenURL(w http.ResponseWriter, r *http.Request) {
 		expiry = &parsedExpiry
 	}
 
+	// Get user ID from JWT token if available
+	var userID uint
+	if tokenString, err := auth.ExtractTokenFromRequest(r); err == nil {
+		if claims, err := auth.VerifyToken(tokenString); err == nil {
+			// Get user ID from database using username
+			var user models.User
+			if err := db.DB.Where("username = ?", claims.Username).First(&user).Error; err == nil {
+				userID = user.ID
+			}
+		}
+	}
+
 	// Save the URL to the database
 	url := models.URL{
 		LongURL:  req.LongURL,
 		ShortURL: shortURL,
 		Expiry:   expiry,
+		UserID:   userID,
 	}
 	if err := db.DB.Create(&url).Error; err != nil {
 		http.Error(w, "Failed to save URL", http.StatusInternalServerError)

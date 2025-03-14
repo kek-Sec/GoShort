@@ -10,4 +10,5 @@ type URL struct {
 	CreatedAt time.Time `gorm:"autoCreateTime"`
 	Expiry    *time.Time `gorm:"type:timestamp"` // Optional expiry date
 	Clicks    int       `gorm:"default:0"`
+	UserID    uint      `gorm:"index"` // Add UserID field to track who created the short URL
 }

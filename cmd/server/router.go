@@ -2,6 +2,7 @@ package main
 
 import (
 	v1 "GoShort/internal/api/v1"
+	"GoShort/internal/auth"
 
 	"github.com/gorilla/mux"
 )
@@ -15,7 +16,10 @@ func setupRouter() *mux.Router {
 	apiV1.HandleFunc("/shorten", v1.ShortenURL).Methods("POST")
 	apiV1.HandleFunc("/config", v1.GetConfig).Methods("GET") // Add config endpoint
 
-// Auth Routes
+	// Protected stats endpoint - requires authentication
+	apiV1.HandleFunc("/stats", auth.AuthMiddleware(v1.GetURLStats)).Methods("GET")
+
+	// Auth Routes
 	authRouter := apiV1.PathPrefix("/auth").Subrouter()
 	v1.RegisterAuthRoutes(authRouter)
 
