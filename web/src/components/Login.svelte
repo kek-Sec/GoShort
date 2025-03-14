@@ -2,6 +2,10 @@
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
   import { browser } from '$app/environment';
+  import { createEventDispatcher } from 'svelte';
+
+  // Create event dispatcher
+  const dispatch = createEventDispatcher();
 
   // Get the brand config from the layout data
   const brandConfig = $page.data.brandConfig;
@@ -60,8 +64,11 @@
         // Store the JWT token
         localStorage.setItem('authToken', data.token);
 
-        // Redirect to dashboard or home page
-        goto('/');
+        // Dispatch login success event with user data
+        dispatch('loginsuccess', { 
+          user: data.user || { username },
+          token: data.token
+        });
       }
     } catch (error) {
       if (!errorMessage) {
