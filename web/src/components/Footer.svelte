@@ -2,7 +2,6 @@
   import { page } from '$app/stores';
 
   // Get the brand config from the layout data
-  // Use $ to reactively access the store value in runes mode
   const brandConfig = $page.data.brandConfig;
 </script>
 
@@ -25,7 +24,7 @@
         <a
           href={brandConfig.footerLink}
           target="_blank"
-          class="text-[var(--brand-primary)] underline hover:opacity-80 font-medium"
+          class="text-brand-primary underline hover:opacity-80 font-medium"
         >
           GitHub
         </a>

@@ -9,6 +9,23 @@
   --brand-theme: #4caf50;
 }
 
+/* Add utility classes for dynamic colors */
+.text-brand-primary {
+  color: var(--brand-primary) !important;
+}
+
+.bg-brand-primary {
+  background-color: var(--brand-primary) !important;
+}
+
+.text-brand-secondary {
+  color: var(--brand-secondary) !important;
+}
+
+.bg-brand-secondary {
+  background-color: var(--brand-secondary) !important;
+}
+
 html,
 body {
   margin: 0;

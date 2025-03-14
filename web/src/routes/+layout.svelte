@@ -5,14 +5,12 @@
 	let { data, children } = $props();
 	const { brandConfig } = data;
 
-	// Apply theme colors using CSS variables
-	const customStyles = `
-		:root {
-			--brand-primary: ${brandConfig.primaryColor};
-			--brand-secondary: ${brandConfig.secondaryColor};
-			--brand-theme: ${brandConfig.themeColor};
-		}
-	`;
+	$effect(() => {
+		// Apply theme colors using CSS variables directly to document root
+		document.documentElement.style.setProperty('--brand-primary', brandConfig.primaryColor);
+		document.documentElement.style.setProperty('--brand-secondary', brandConfig.secondaryColor);
+		document.documentElement.style.setProperty('--brand-theme', brandConfig.themeColor);
+	});
 </script>
 
 <!-- Inject custom styles -->
@@ -25,9 +23,6 @@
 	<meta name="keywords" content={brandConfig.keywords} />
 	<meta name="author" content={brandConfig.author} />
 	<meta name="theme-color" content={brandConfig.themeColor} />
-
-	<!-- Apply custom styles -->
-	<style>{customStyles}</style>
 </svelte:head>
 
 {@render children()}

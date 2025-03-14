@@ -72,7 +72,7 @@
 </script>
 
 <div class="flex flex-col items-center justify-center bg-gray-100 p-4">
-	<h1 class="text-4xl font-bold text-[var(--brand-primary)] mb-6">{brandConfig.headerTitle}</h1>
+	<h1 class="text-4xl font-bold text-brand-primary mb-6">{brandConfig.headerTitle}</h1>
 
 	<div class="w-full max-w-md space-y-4">
 		<!-- Long URL Input -->
@@ -84,7 +84,7 @@
 				bind:value={longUrl}
 				on:input={handleInputChange}
 				placeholder="Enter your URL"
-				class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-[var(--brand-primary)] focus:outline-none"
+				class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-primary"
 				required
 			/>
 			{#if validationError}
@@ -145,7 +145,7 @@
 		<!-- Shorten Button -->
 		<button
 			on:click={shortenUrl}
-			class="w-full bg-[var(--brand-primary)] text-white font-semibold py-2 px-4 rounded-lg hover:opacity-90 focus:ring focus:ring-[var(--brand-primary)] focus:outline-none transition"
+			class="w-full bg-brand-primary text-white font-semibold py-2 px-4 rounded-lg hover:opacity-90 focus:ring focus:ring-brand-primary focus:outline-none transition"
 		>
 			Shorten
 		</button>
@@ -159,11 +159,11 @@
 				<div
 					class="bg-gray-100 text-gray-800 px-4 py-2 rounded-md border border-gray-300 font-mono text-sm break-all w-full max-w-lg"
 				>
-					<a href={shortUrl} target="_blank" class="hover:text-[var(--brand-primary)]">{shortUrl}</a>
+					<a href={shortUrl} target="_blank" class="hover:text-brand-primary">{shortUrl}</a>
 				</div>
 				<button
 					on:click={copyToClipboard}
-					class="bg-[var(--brand-secondary)] text-white font-semibold py-2 px-4 rounded-lg hover:opacity-90 focus:ring focus:ring-[var(--brand-secondary)] focus:outline-none transition flex items-center space-x-2"
+					class="bg-brand-secondary text-white font-semibold py-2 px-4 rounded-lg hover:opacity-90 focus:ring focus:ring-brand-secondary focus:outline-none transition flex items-center space-x-2"
 				>
 					{#if isCopied}
 						<span class="animate-pulse">Copied! ✅</span>
